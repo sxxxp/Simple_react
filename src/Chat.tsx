@@ -9,6 +9,7 @@ const rooms = [
   { id: "3", name: "🎮 게임 채팅방" },
   { id: "4", name: "📚 공부 채팅방" },
   { id: "5", name: "😄 수다 채팅방" },
+  { id: "6", name: "🎶 음악 채팅방" },
 ];
 type Method = "join" | "exit" | "send";
 
@@ -106,13 +107,12 @@ const Chat: React.FC = () => {
 
     socket.onmessage = (event) => {
       event.data.split("\n").forEach((msg: string) => {
-        if(msg==="") return;
-        try{
+        if (msg === "") return;
+        try {
           let message: Message = JSON.parse(msg);
           setMessages((prev) => [...prev, message]);
-
-        }catch(e){
-          console.log("메시지 원본:",msg);
+        } catch (e) {
+          console.log("메시지 원본:", msg);
           console.error("메시지 파싱 오류:", e);
         }
       });
