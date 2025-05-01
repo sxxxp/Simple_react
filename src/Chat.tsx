@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Cookies, useCookies } from "react-cookie";
-import { useBeforeUnload, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./Chat.css";
 
 const rooms = [
