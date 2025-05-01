@@ -85,8 +85,10 @@ const Chat: React.FC = () => {
     const d = date.getDate().toString().padStart(2, "0");
     const h = date.getHours().toString().padStart(2, "0");
     const m = date.getMinutes().toString().padStart(2, "0");
-    return `${y}:${M}:${d}:${h}:${m}`;
-    
+    const s = date.getSeconds().toString().padStart(2, "0");
+    const ms = date.getMilliseconds().toString().padStart(3, "0");
+    return `${y}:${M}:${d}:${h}:${m}:${s}:${ms}`;
+
   };
 
   const messageFormat = (type: Method, user: string, message: string) => {
