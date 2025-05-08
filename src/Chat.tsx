@@ -9,7 +9,7 @@ const rooms = [
   { id: "3", name: "🎮 게임 채팅방" },
   { id: "4", name: "📚 공부 채팅방" },
   { id: "5", name: "😄 수다 채팅방" },
-  { id: "6", name: "🎶 음악 채팅방" }
+  { id: "6", name: "🎶 음악 채팅방" },
 ];
 type Method = "join" | "exit" | "send";
 
@@ -19,7 +19,10 @@ interface Message {
   user: string;
   time: string;
 }
-
+const DateMessage = (time: string) => {
+  const [year, month, date, hour, minute, second, millisecond] = time.split(":");
+  return `${hour}:${minute}`;
+};
 const ChatMessage = ({ message }: { message: Message }) => {
   const cookie = new Cookies();
   const isOwn = message.user === cookie.get("nickname");
@@ -27,7 +30,8 @@ const ChatMessage = ({ message }: { message: Message }) => {
     return (
       <div className="system-message">
         <span>
-          {message.message} <span className="timestamp">{message.time}</span>
+          {message.message}{" "}
+          <span className="timestamp">{DateMessage(message.time)}</span>
         </span>
       </div>
     );
@@ -46,7 +50,7 @@ const ChatMessage = ({ message }: { message: Message }) => {
       <div className="message-content">
         <div className="message-info">
           <span className="username">{message.user}</span>
-          <span className="timestamp">{message.time}</span>
+          <span className="timestamp">{DateMessage(message.time)}</span>
         </div>
         <div className="message-bubble">{message.message}</div>
       </div>
@@ -88,7 +92,6 @@ const Chat: React.FC = () => {
     const s = date.getSeconds().toString().padStart(2, "0");
     const ms = date.getMilliseconds().toString().padStart(3, "0");
     return `${y}:${M}:${d}:${h}:${m}:${s}:${ms}`;
-
   };
 
   const messageFormat = (type: Method, user: string, message: string) => {
