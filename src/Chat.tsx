@@ -17,16 +17,43 @@ interface Message {
   type: Method;
   message: string;
   user: string;
-  time: string;
+  time: Date;
 }
-const DateMessage = (time: string) => {
-  const [year, month, date, hour, minute, second, millisecond] = time.split(":");
+const MessageTime = (time: string) => {
+  const [year, month, date, hour, minute, second, millisecond] =
+    time.split(":");
+  const messageDate = new Date(
+    parseInt(year),
+    parseInt(month) - 1,
+    parseInt(date),
+    parseInt(hour),
+    parseInt(minute),
+    parseInt(second),
+    parseInt(millisecond)
+  );
+  return messageDate;
+};
+const DateMessage = (time: Date) => {
+  const hour = time.getHours().toString().padStart(2, "0");
+  const minute = time.getMinutes().toString().padStart(2, "0");
   return `${hour}:${minute}`;
 };
+const ChangeDate = (time: Date) => {
+  const month = (time.getMonth() + 1).toString().padStart(2, "0");
+  const date = time.getDate().toString().padStart(2, "0");
+  return `${month}월 ${date}일`;
+}
 const ChatMessage = ({ message }: { message: Message }) => {
   const cookie = new Cookies();
   const isOwn = message.user === cookie.get("nickname");
   if (message.user === "[system]") {
+    if(message.message ===""){
+      return (
+        <div className="system-message">
+          <span className="timestamp">{ChangeDate(message.time)}</span>
+        </div>
+      );
+    }
     return (
       <div className="system-message">
         <span>
@@ -55,6 +82,13 @@ const ChatMessage = ({ message }: { message: Message }) => {
         <div className="message-bubble">{message.message}</div>
       </div>
     </div>
+  );
+};
+const CompareDate = (date1: Date, date2: Date) => {
+  return (
+    date1.getFullYear() === date2.getFullYear() &&
+    date1.getMonth() === date2.getMonth() &&
+    date1.getDate() === date2.getDate()
   );
 };
 
@@ -115,8 +149,23 @@ const Chat: React.FC = () => {
       event.data.split("\n").forEach((msg: string) => {
         if (msg === "") return;
         try {
-          let message: Message = JSON.parse(msg);
-          setMessages((prev) => [...prev, message]);
+          let raw_message = JSON.parse(msg);
+          raw_message.time! = MessageTime(raw_message.time);
+          const message: Message = raw_message;
+          if (message.type === "exit") {
+            setMessages((prev) => {
+              if (CompareDate(prev[prev.length - 1].time, message.time)) {
+                const msg: Message = {
+                  type: "send",
+                  message: "",
+                  user: "[system]",
+                  time: message.time,
+                };
+                return [...prev, msg, message];
+              }
+              return [...prev, message];
+            });
+          }
         } catch (e) {
           console.log("메시지 원본:", msg);
           console.error("메시지 파싱 오류:", e);
@@ -161,15 +210,15 @@ const Chat: React.FC = () => {
       socketRef.current = null;
     }
 
-    setMessages((prev) => [
-      ...prev,
-      {
-        type: "exit",
-        message: "👋 유저님이 채팅을 떠났습니다.",
-        user: "[system]",
-        time: getTime(),
-      },
-    ]);
+    // setMessages((prev) => [
+    //   ...prev,
+    //   {
+    //     type: "exit",
+    //     message: "👋 유저님이 채팅을 떠났습니다.",
+    //     user: "[system]",
+    //     time: getTime(),
+    //   },
+    // ]);
     navigate("/chat");
   };
 
