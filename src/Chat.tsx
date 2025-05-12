@@ -42,12 +42,12 @@ const ChangeDate = (time: Date) => {
   const month = (time.getMonth() + 1).toString().padStart(2, "0");
   const date = time.getDate().toString().padStart(2, "0");
   return `${month}월 ${date}일`;
-}
+};
 const ChatMessage = ({ message }: { message: Message }) => {
   const cookie = new Cookies();
   const isOwn = message.user === cookie.get("nickname");
   if (message.user === "[system]") {
-    if(message.message ===""){
+    if (message.message === "") {
       return (
         <div className="system-message">
           <span className="timestamp">{ChangeDate(message.time)}</span>
@@ -152,9 +152,9 @@ const Chat: React.FC = () => {
           let raw_message = JSON.parse(msg);
           raw_message.time! = MessageTime(raw_message.time);
           const message: Message = raw_message;
-          if (message.type === "exit") {
-            setMessages((prev) => {
-              if (CompareDate(prev[prev.length - 1].time, message.time)) {
+          setMessages((prev) => {
+            if (prev.length !== 0) {
+              if (!CompareDate(prev[prev.length - 1].time, message.time)) {
                 const msg: Message = {
                   type: "send",
                   message: "",
@@ -163,9 +163,9 @@ const Chat: React.FC = () => {
                 };
                 return [...prev, msg, message];
               }
-              return [...prev, message];
-            });
-          }
+            }
+            return [...prev, message];
+          });
         } catch (e) {
           console.log("메시지 원본:", msg);
           console.error("메시지 파싱 오류:", e);
@@ -178,7 +178,10 @@ const Chat: React.FC = () => {
       console.log("❌ WebSocket 연결 종료");
     };
 
-    socket.onerror = (e) => console.error(e);
+    socket.onerror = (e) => {
+      console.log();
+      console.error(e);
+    };
 
     return () => {
       socket.close();
