@@ -39,9 +39,10 @@ const DateMessage = (time: Date) => {
   return `${hour}:${minute}`;
 };
 const ChangeDate = (time: Date) => {
+  const year = time.getFullYear().toString().padStart(4, "0");
   const month = (time.getMonth() + 1).toString().padStart(2, "0");
   const date = time.getDate().toString().padStart(2, "0");
-  return `${month}월 ${date}일`;
+  return `${year}년 ${month}월 ${date}일`;
 };
 const ChatMessage = ({ message }: { message: Message }) => {
   const cookie = new Cookies();
@@ -153,16 +154,23 @@ const Chat: React.FC = () => {
           raw_message.time! = MessageTime(raw_message.time);
           const message: Message = raw_message;
           setMessages((prev) => {
-            if (prev.length !== 0) {
-              if (!CompareDate(prev[prev.length - 1].time, message.time)) {
-                const msg: Message = {
-                  type: "send",
-                  message: "",
-                  user: "[system]",
-                  time: message.time,
-                };
-                return [...prev, msg, message];
-              }
+            if (prev.length === 0) {
+              const msg: Message = {
+                type: "send",
+                message: "",
+                user: "[system]",
+                time: message.time,
+              };
+              return [msg, message];
+            }
+            if (!CompareDate(prev[prev.length - 1].time, message.time)) {
+              const msg: Message = {
+                type: "send",
+                message: "",
+                user: "[system]",
+                time: message.time,
+              };
+              return [...prev, msg, message];
             }
             return [...prev, message];
           });
