@@ -4,8 +4,9 @@
 
 # testing
 /coverage
-
-
+/buid
+*.md
+.github
 # misc
 .DS_Store
 .env.local
