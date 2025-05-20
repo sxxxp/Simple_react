@@ -17,7 +17,7 @@ const Home = () => {
   };
   useEffect(() => {}, [name]);
   return (
-    <>
+    <div className="home-container">
       <NavLink to={"/login"} className="chat-button">
         로그인 하러가기
       </NavLink>
@@ -27,7 +27,7 @@ const Home = () => {
       <NavLink to={"/chat"} className="chat-button">
         채팅하러가기
       </NavLink>
-    </>
+    </div>
   );
 };
 
