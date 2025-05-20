@@ -6,6 +6,8 @@ import NotFound from "./NotFound";
 import Home from "./Home";
 import ChatList from "./Chatlist";
 import { CookiesProvider } from "react-cookie";
+import Login from "./Login";
+import Register from "./Register";
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/chat" element={<ChatList />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/chat/:id" element={<Chat />} />
 
           <Route path="*" element={<NotFound />} />
