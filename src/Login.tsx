@@ -6,7 +6,7 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const [cookie] = useCookies(["user"]);
+  const [cookie,setCookie] = useCookies(["user"]);
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     fetch("http://localhost:4000/user/login", {
@@ -25,7 +25,7 @@ const Login: React.FC = () => {
       }
       res.json().then((data) => {
         console.log("로그인 성공:", data);
-        cookie.user = data
+        setCookie(data, { path: "/" });
         navigate("/");
       });
     });
