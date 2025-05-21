@@ -5,14 +5,14 @@ import "./Home.css";
 import { useEffect, useState } from "react";
 
 const Home = () => {
-  const [cookies, ] = useCookies(["user"]);
-  const [name, ] = useState<string>(cookies.user.name || "로그인 안됨");
-  useEffect(() => {}, [name]);
+  const [cookies] = useCookies(["user"]);
+  const [name, setName] = useState<string>("로그인 안됨");
+  useEffect(() => {
+    if (cookies.user.name) setName(cookies.user.name);
+  }, [name, cookies]);
   return (
     <div className="home-container">
-      <div className="home-title">
-
-      </div>
+      <div className="home-title">{cookies.user.name}</div>
       <NavLink to={"/login"} className="chat-button">
         로그인 하러가기
       </NavLink>
