@@ -96,8 +96,8 @@ const CompareDate = (date1: Date, date2: Date) => {
 const Chat: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const [cookie] = useCookies(["nickname"]);
-  const user = cookie.nickname || "게스트";
+  const [cookie] = useCookies(["user"]);
+  const user = cookie.user.name || "게스트";
   const scrollRef = useRef<HTMLDivElement>(null);
   const { id } = useParams();
   const socketRef = useRef<WebSocket | null>(null);

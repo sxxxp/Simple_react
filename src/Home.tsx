@@ -5,19 +5,14 @@ import "./Home.css";
 import { useEffect, useState } from "react";
 
 const Home = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["nickname"]);
-  const [name, setName] = useState<string>(cookies.nickname);
-  const [inputValue, setInputValue] = useState<string>("");
-  const setNickname = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (inputValue) {
-      setCookie("nickname", inputValue, { path: "/" });
-      setName(inputValue);
-    }
-  };
+  const [cookies, ] = useCookies(["user"]);
+  const [name, ] = useState<string>(cookies.user.name);
   useEffect(() => {}, [name]);
   return (
     <div className="home-container">
+      <div className="home-title">
+
+      </div>
       <NavLink to={"/login"} className="chat-button">
         로그인 하러가기
       </NavLink>
