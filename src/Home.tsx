@@ -2,18 +2,13 @@
 import { NavLink } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import "./Home.css";
-import { useEffect, useState } from "react";
 
 const Home = () => {
   const [cookies] = useCookies(["user"]);
-  const [name, setName] = useState<string>("로그인 안됨");
-  const {u_name,email} = cookies.user;
-  useEffect(() => {
-    if (u_name) setName(u_name);
-  }, [name, cookies]);
+  const { name } = cookies.user || { name: "로그인 안됨" };
   return (
     <div className="home-container">
-      <div className="home-title">{cookies.user.name}</div>
+      <div className="home-title">{name}</div>
       <NavLink to={"/login"} className="chat-button">
         로그인 하러가기
       </NavLink>
