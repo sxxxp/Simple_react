@@ -7,7 +7,7 @@ const Register: React.FC = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const [cookie] = useCookies(["user"]);
+  const [cookie,setCookie] = useCookies(["user"]);
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +31,7 @@ const Register: React.FC = () => {
       })
       .then((data) => {
         console.log("회원가입 성공:", data);
-        cookie.user = data;
+        setCookie(data, { path: "/" });
         navigate("/");
       })
       .catch((error) => {

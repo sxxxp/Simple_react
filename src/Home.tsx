@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 const Home = () => {
   const [cookies, ] = useCookies(["user"]);
-  const [name, ] = useState<string>(cookies.user.name);
+  const [name, ] = useState<string>(cookies.user.name || "로그인 안됨");
   useEffect(() => {}, [name]);
   return (
     <div className="home-container">
