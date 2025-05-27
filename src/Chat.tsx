@@ -45,8 +45,8 @@ const ChangeDate = (time: Date) => {
   return `${year}년 ${month}월 ${date}일`;
 };
 const ChatMessage = ({ message }: { message: Message }) => {
-  const cookie = new Cookies();
-  const isOwn = message.user === cookie.get("nickname");
+  const [cookies] = useCookies(["user"]);
+  const isOwn = message.user === cookies.user.name || message.user === "게스트";
   if (message.user === "[system]") {
     if (message.message === "") {
       return (
@@ -97,14 +97,17 @@ const Chat: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [cookie] = useCookies(["user"]);
-  const user = cookie.user.name || "게스트";
+  if (!cookie.user) {
+    cookie.user.name = "게스트";
+  }
+  const user = cookie.user.name;
   const scrollRef = useRef<HTMLDivElement>(null);
   const { id } = useParams();
   const socketRef = useRef<WebSocket | null>(null);
   const navigate = useNavigate();
 
   const room = rooms.find((r) => r.id === id);
-  const WS_URL = "ws://localhost:4000/ws/" + id;
+  const WS_URL = `ws://${process.env.serverurl}/ws/` + id;
 
   if (!room) {
     navigate("/404");

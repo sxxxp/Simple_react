@@ -31,7 +31,7 @@ const Register: React.FC = () => {
       })
       .then((data) => {
         console.log("회원가입 성공:", data);
-        setCookie(data, { path: "/" });
+        setCookie("user",JSON.stringify(data), { path: "/" });
         navigate("/");
       })
       .catch((error) => {
