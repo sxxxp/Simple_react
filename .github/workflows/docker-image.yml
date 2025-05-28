@@ -22,7 +22,7 @@ jobs:
         password: ${{ secrets.DOCKER_TOKEN }}
 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/react:lastest
+      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/react:latest
 
     - name: Push the Docker image
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/react:lastest
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/react:latest
