@@ -6,8 +6,9 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
-  const [cookie,setCookie] = useCookies(["user"]);
+  const [cookie, setCookie] = useCookies(["user"]);
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,14 +25,18 @@ const Register: React.FC = () => {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("회원가입 실패");
+          if (response.status === 409) {
+            setError("이미 사용중인 이름이 있거나 이메일이 있습니다.");
+          }else {
+            setError("회원가입 실패");
+          }
         } else {
           return response.json();
         }
       })
       .then((data) => {
         console.log("회원가입 성공:", data);
-        setCookie("user",JSON.stringify(data), { path: "/" });
+        setCookie("user", JSON.stringify(data), { path: "/" });
         navigate("/");
       })
       .catch((error) => {
@@ -42,6 +47,8 @@ const Register: React.FC = () => {
 
   return (
     <form onSubmit={handleRegister}>
+      <h3>{error}</h3>
+
       <input
         type="text"
         placeholder="이름"

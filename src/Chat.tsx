@@ -47,7 +47,7 @@ const ChangeDate = (time: Date) => {
 };
 const ChatMessage = ({ message }: { message: Message }) => {
   const [cookies] = useCookies(["user"]);
-  const isOwn = message.user === cookies.user || message.user.name === "게스트";
+  const isOwn = message.user.name === cookies.user.name || message.user.name === "게스트";
   if (message.user.name === "[system]") {
     if (message.message === "") {
       return (
@@ -110,7 +110,7 @@ const Chat: React.FC = () => {
   const navigate = useNavigate();
 
   const room = rooms.find((r) => r.id === id);
-  const WS_URL = `ws://localhost:4000/ws/` + id;
+  const WS_URL = `ws://localhost:4001/ws/` + id;
 
   // const unloadFunc = (e: BeforeUnloadEvent) => {
   //   e.preventDefault();
@@ -132,7 +132,12 @@ const Chat: React.FC = () => {
   };
 
   const messageFormat = (type: Method, user: IUser, message: string) => {
-    return `{"type":"${type}","user":"${user}","message":"${message}","time":"${getTime()}"}`;
+    return JSON.stringify({
+      type,
+      user: JSON.stringify(user),
+      message,
+      time: getTime(),
+    });
   };
 
   useEffect(() => {
@@ -166,7 +171,9 @@ const Chat: React.FC = () => {
         try {
           let raw_message = JSON.parse(msg);
           raw_message.time! = MessageTime(raw_message.time);
+          raw_message.user = JSON.parse(raw_message.user);
           const message: Message = raw_message;
+          console.log("📥 수신된 메시지:", message);
           setMessages((prev) => {
             if (prev.length === 0) {
               const msg: Message = {
@@ -208,7 +215,7 @@ const Chat: React.FC = () => {
     return () => {
       socket.close();
     };
-  }, []);
+  }, [room, user]);
 
   // 스크롤 자동 아래로
   useEffect(() => {
@@ -234,7 +241,7 @@ const Chat: React.FC = () => {
         messageFormat(
           "exit",
           { name: "[system]", email: "", image: "" },
-          `${user} 퇴장`
+          `${user.name} 퇴장`
         )
       );
       socketRef.current.close();
