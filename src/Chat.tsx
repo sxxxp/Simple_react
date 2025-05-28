@@ -111,7 +111,7 @@ const Chat: React.FC = () => {
   const navigate = useNavigate();
 
   const room = rooms.find((r) => r.id === id);
-  const WS_URL = `ws://${process.env.API_URL}/ws/` + id;
+  const WS_URL = `ws://my-server-svc:4000/ws/` + id;
 
   if (!room) {
     navigate("/404");
@@ -229,13 +229,7 @@ const Chat: React.FC = () => {
 
   const exitChat = () => {
     if (socketRef.current) {
-      socketRef.current.send(
-        messageFormat(
-          "exit",
-          { name: "[system]", email: "", image: "" },
-          `${user} 퇴장`
-        )
-      );
+      socketRef.current.send(messageFormat("exit", { name: "[system]", email: "", image: "" }, `${user} 퇴장`));
       socketRef.current.close();
       socketRef.current = null;
     }

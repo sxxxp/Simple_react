@@ -10,7 +10,7 @@ const Login: React.FC = () => {
   const [cookie, setCookie] = useCookies(["user"]);
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    fetch(`${process.env.API_URL}/user/login`, {
+    fetch(`http://my-server:4000/user/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -38,7 +38,7 @@ const Login: React.FC = () => {
   return (
     <>
     <h3>{error}</h3>
-    <form action="worker1/user/login" method="POST" onSubmit={handleLogin}>
+    <form action={process.env.API_URL + "/user/login"} method="POST" onSubmit={handleLogin}>
       <input
         type="email"
         placeholder="이메일"
