@@ -11,7 +11,7 @@ const Register: React.FC = () => {
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    fetch(`http://localhost:51234/user/register`, {
+    fetch(`http://localhost:31234/user/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
