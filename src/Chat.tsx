@@ -98,12 +98,12 @@ const Chat: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [cookie] = useCookies(["user"]);
-  const [user, setName] = useState<IUser>({
+  const [user, setUser] = useState<IUser>({
     name: "게스트",
     email: "",
     image: "",
   });
-  if (cookie.user) setName(cookie.user);
+  if (cookie.user) setUser(cookie.user);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const { id } = useParams();
@@ -112,10 +112,6 @@ const Chat: React.FC = () => {
 
   const room = rooms.find((r) => r.id === id);
   const WS_URL = `ws://localhost:4000/ws/` + id;
-
-  if (!room) {
-    navigate("/404");
-  }
 
   // const unloadFunc = (e: BeforeUnloadEvent) => {
   //   e.preventDefault();
@@ -145,6 +141,10 @@ const Chat: React.FC = () => {
     //   console.log("🟡 기존 WebSocket 연결이 존재합니다.",console.log(socketRef.current));
     //   return;
     // }
+
+    if (!room) {
+      navigate("/404");
+    }
     const socket = new WebSocket(WS_URL);
 
     socket.onopen = () => {
@@ -229,7 +229,13 @@ const Chat: React.FC = () => {
 
   const exitChat = () => {
     if (socketRef.current) {
-      socketRef.current.send(messageFormat("exit", { name: "[system]", email: "", image: "" }, `${user} 퇴장`));
+      socketRef.current.send(
+        messageFormat(
+          "exit",
+          { name: "[system]", email: "", image: "" },
+          `${user} 퇴장`
+        )
+      );
       socketRef.current.close();
       socketRef.current = null;
     }
