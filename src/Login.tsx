@@ -10,7 +10,7 @@ const Login: React.FC = () => {
   const [cookie, setCookie] = useCookies(["user"]);
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    fetch(`http://192.168.49.2:30001/user/login`, {
+    fetch(`http://localhost:4000/user/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
