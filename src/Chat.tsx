@@ -45,9 +45,9 @@ const ChangeDate = (time: Date) => {
   const date = time.getDate().toString().padStart(2, "0");
   return `${year}년 ${month}월 ${date}일`;
 };
-const ChatMessage = ({ message }: { message: Message }) => {
-  const [cookies] = useCookies(["user"]);
-  const isOwn = message.user.name === cookies.user.name || message.user.name === "게스트";
+const ChatMessage = ({ message, user }: { message: Message; user: IUser }) => {
+  const isOwn =
+    message.user.name === user.name || message.user.name === "게스트";
   if (message.user.name === "[system]") {
     if (message.message === "") {
       return (
@@ -270,7 +270,7 @@ const Chat: React.FC = () => {
       </div>
       <div className="chat-body" ref={scrollRef}>
         {messages.map((msg, index) => (
-          <ChatMessage key={index} message={msg} />
+          <ChatMessage key={index} message={msg} user={user} />
         ))}
       </div>
       <div className="chat-input">
