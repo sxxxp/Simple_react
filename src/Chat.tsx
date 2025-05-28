@@ -103,7 +103,6 @@ const Chat: React.FC = () => {
     email: "",
     image: "",
   });
-  if (cookie.user) setUser(cookie.user);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const { id } = useParams();
@@ -145,6 +144,8 @@ const Chat: React.FC = () => {
     if (!room) {
       navigate("/404");
     }
+    if (cookie.user) setUser(cookie.user);
+
     const socket = new WebSocket(WS_URL);
 
     socket.onopen = () => {
