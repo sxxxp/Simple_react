@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Cookies, useCookies } from "react-cookie";
 import { useNavigate, useParams } from "react-router-dom";
 import "./Chat.css";
+import { IUser } from "./User";
 
 const rooms = [
   { id: "1", name: "💬 일반 채팅방" },
@@ -16,7 +17,7 @@ type Method = "join" | "exit" | "send";
 interface Message {
   type: Method;
   message: string;
-  user: string;
+  user: IUser;
   time: Date;
 }
 const MessageTime = (time: string) => {
@@ -46,8 +47,8 @@ const ChangeDate = (time: Date) => {
 };
 const ChatMessage = ({ message }: { message: Message }) => {
   const [cookies] = useCookies(["user"]);
-  const isOwn = message.user === cookies.user.name || message.user === "게스트";
-  if (message.user === "[system]") {
+  const isOwn = message.user === cookies.user || message.user.name === "게스트";
+  if (message.user.name === "[system]") {
     if (message.message === "") {
       return (
         <div className="system-message">
@@ -77,7 +78,7 @@ const ChatMessage = ({ message }: { message: Message }) => {
       />
       <div className="message-content">
         <div className="message-info">
-          <span className="username">{message.user}</span>
+          <span className="username">{message.user.name}</span>
           <span className="timestamp">{DateMessage(message.time)}</span>
         </div>
         <div className="message-bubble">{message.message}</div>
@@ -97,10 +98,13 @@ const Chat: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [cookie] = useCookies(["user"]);
-  if (!cookie.user) {
-    cookie.user.name = "게스트";
-  }
-  const user = cookie.user.name;
+  const [user, setName] = useState<IUser>({
+    name: "게스트",
+    email: "",
+    image: "",
+  });
+  if (cookie.user) setName(cookie.user);
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const { id } = useParams();
   const socketRef = useRef<WebSocket | null>(null);
@@ -132,7 +136,7 @@ const Chat: React.FC = () => {
     return `${y}:${M}:${d}:${h}:${m}:${s}:${ms}`;
   };
 
-  const messageFormat = (type: Method, user: string, message: string) => {
+  const messageFormat = (type: Method, user: IUser, message: string) => {
     return `{"type":"${type}","user":"${user}","message":"${message}","time":"${getTime()}"}`;
   };
 
@@ -146,7 +150,13 @@ const Chat: React.FC = () => {
     socket.onopen = () => {
       console.log("✅ WebSocket 연결됨");
       socketRef.current = socket;
-      socket.send(messageFormat("join", "[system]", `${user} 입장`));
+      socket.send(
+        messageFormat(
+          "join",
+          { name: "[system]", email: "", image: "" },
+          `${user!.name} 입장`
+        )
+      );
     };
 
     socket.onmessage = (event) => {
@@ -161,7 +171,7 @@ const Chat: React.FC = () => {
               const msg: Message = {
                 type: "send",
                 message: "",
-                user: "[system]",
+                user: { name: "[system]", email: "", image: "" },
                 time: message.time,
               };
               return [msg, message];
@@ -170,7 +180,7 @@ const Chat: React.FC = () => {
               const msg: Message = {
                 type: "send",
                 message: "",
-                user: "[system]",
+                user: { name: "[system]", email: "", image: "" },
                 time: message.time,
               };
               return [...prev, msg, message];
@@ -219,7 +229,13 @@ const Chat: React.FC = () => {
 
   const exitChat = () => {
     if (socketRef.current) {
-      socketRef.current.send(messageFormat("exit", "[system]", `${user} 퇴장`));
+      socketRef.current.send(
+        messageFormat(
+          "exit",
+          { name: "[system]", email: "", image: "" },
+          `${user} 퇴장`
+        )
+      );
       socketRef.current.close();
       socketRef.current = null;
     }
