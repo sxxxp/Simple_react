@@ -111,7 +111,7 @@ const Chat: React.FC = () => {
   const navigate = useNavigate();
 
   const room = rooms.find((r) => r.id === id);
-  const WS_URL = `ws://localhost:31234/ws/` + id;
+  const WS_URL = `ws://my-server-svc:4000/ws/` + id;
 
   if (!room) {
     navigate("/404");
