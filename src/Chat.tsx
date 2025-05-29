@@ -110,7 +110,7 @@ const Chat: React.FC = () => {
   const navigate = useNavigate();
 
   const room = rooms.find((r) => r.id === id);
-  const WS_URL = `/api/websocket/ws/` + id;
+  const WS_URL = `/ws/` + id;
 
   // const unloadFunc = (e: BeforeUnloadEvent) => {
   //   e.preventDefault();
