@@ -110,7 +110,7 @@ const Chat: React.FC = () => {
   const navigate = useNavigate();
 
   const room = rooms.find((r) => r.id === id);
-  const WS_URL = `/websocket/ws/` + id;
+  // const WS_URL = `/websocket/ws/` + id;
 
   // const unloadFunc = (e: BeforeUnloadEvent) => {
   //   e.preventDefault();
@@ -151,7 +151,7 @@ const Chat: React.FC = () => {
     }
     if (cookie.user) setUser(cookie.user);
 
-    const socket = new WebSocket(WS_URL);
+    const socket = new WebSocket("ws://" + window.location.host + "/ws/" + id);
 
     socket.onopen = () => {
       console.log("✅ WebSocket 연결됨");
