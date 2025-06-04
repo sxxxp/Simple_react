@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-
+import "./AuthForm.css";
 const Register: React.FC = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -27,7 +27,7 @@ const Register: React.FC = () => {
         if (!response.ok) {
           if (response.status === 409) {
             setError("이미 사용중인 이름이 있거나 이메일이 있습니다.");
-          }else {
+          } else {
             setError("회원가입 실패");
           }
         } else {
@@ -41,12 +41,12 @@ const Register: React.FC = () => {
       })
       .catch((error) => {
         console.error("Error:", error);
-        alert("회원가입 실패!");
+        setError("회원가입 실패");
       });
   };
 
   return (
-    <form onSubmit={handleRegister}>
+    <form onSubmit={handleRegister} className={"auth-form"}>
       <h3>{error}</h3>
 
       <input
@@ -71,6 +71,13 @@ const Register: React.FC = () => {
         required
       />
       <button type="submit">회원가입</button>
+      <button
+        onClick={() => {
+          navigate("/");
+        }}
+      >
+        돌아가기
+      </button>
     </form>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
+import "./AuthForm.css";
 import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
@@ -36,9 +37,13 @@ const Login: React.FC = () => {
   };
 
   return (
-    <>
-    <h3>{error}</h3>
-    <form action={process.env.API_URL + "/user/login"} method="POST" onSubmit={handleLogin}>
+    <form
+      action={process.env.API_URL + "/user/login"}
+      method="POST"
+      onSubmit={handleLogin}
+      className="auth-form"
+    >
+      <h3>{error}</h3>
       <input
         type="email"
         placeholder="이메일"
@@ -54,9 +59,15 @@ const Login: React.FC = () => {
         required
       />
       <button type="submit">로그인</button>
+      <button
+        onClick={() => {
+          navigate("/");
+        }}
+      >
+        뒤로가기
+      </button>
     </form>
-  </>
-    );
+  );
 };
 
 export default Login;
