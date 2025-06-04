@@ -17,7 +17,7 @@ const Login: React.FC = () => {
     }
     await new Promise((resolve) => setTimeout(resolve, 60000 * (tried - 4)));
     setTried(0);
-
+    setError("");
     if (submit.current) {
       submit.current.disabled = false;
     }

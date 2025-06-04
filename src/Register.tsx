@@ -26,18 +26,17 @@ const Register: React.FC = () => {
       .then((response) => {
         if (!response.ok) {
           if (response.status === 409) {
-            setError("이미 사용중인 이름이 있거나 이메일이 있습니다.");
+            return setError("이미 사용중인 이름이 있거나 이메일이 있습니다.");
           } else {
-            setError("회원가입 실패");
+            return setError("회원가입 실패");
           }
         } else {
-          return response.json();
+          response.json().then((data) => {
+            console.log("회원가입 성공:", data);
+            setCookie("user", JSON.stringify(data), { path: "/" });
+            navigate("/");
+          });
         }
-      })
-      .then((data) => {
-        console.log("회원가입 성공:", data);
-        setCookie("user", JSON.stringify(data), { path: "/" });
-        navigate("/");
       })
       .catch((error) => {
         console.error("Error:", error);
